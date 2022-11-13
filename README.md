@@ -1,5 +1,6 @@
 # Rectle Docker
 
-## Build
-
-- docker compose up
+## Build docker container
+```bash
+docker compose up
+```
