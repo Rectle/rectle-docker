@@ -1,0 +1,7 @@
+version: '3.3'
+
+services:
+  aigym:
+    build: ./.docker
+    volumes:
+      - ./src:/app/src
