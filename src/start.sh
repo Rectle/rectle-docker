@@ -1,2 +1,7 @@
 #!/bin/bash
-python src/test.py > src/pthon.log 2> src/error.log
+
+cd src
+pipreqs .
+pip install -r requirements.txt
+
+python test.py > result.log 2> error.log

@@ -1,5 +1,6 @@
 import gym
 
+
 i = 1 / 0
 env = gym.make("LunarLander-v2", render_mode="rgb_array")
 env.action_space.seed(42)

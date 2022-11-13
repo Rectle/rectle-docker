@@ -4,3 +4,4 @@ pygame
 pyvirtualdisplay
 atari_py 
 pystan
+pipreqs
