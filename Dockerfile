@@ -8,6 +8,7 @@ RUN apt-get update -y && apt-get install -y \
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+USER $NB_UID
 CMD ["src/start.sh"]
 
 
