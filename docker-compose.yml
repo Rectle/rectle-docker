@@ -13,6 +13,6 @@ services:
       - storage
     volumes:
       - services-volume:/app/runtime
-      - ./storage:/app/storage
+      - ./src:/app/storage
 volumes:
   services-volume:
