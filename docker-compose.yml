@@ -1,7 +1,18 @@
 version: '3.3'
 
+
 services:
-  aigym:
-    build: ./
+  storage:
+    build: ./.docker/storage
     volumes:
-      - ./src:/app/src
+      - services-volume:/app/runtime
+      - ./runtime:/app
+  runtime-enviroment:
+    build: ./.docker/runtime-enviroment
+    depends_on:
+      - storage
+    volumes:
+      - services-volume:/app/runtime
+      - ./storage:/app/storage
+volumes:
+  services-volume:
