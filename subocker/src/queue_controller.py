@@ -19,7 +19,7 @@ class QueueController:
 
     def callback(self, ch, method, properties, body):
         print("Queue system: received task")
-        print(ch, method, body)
+        # print(ch, method, body)
         time.sleep(body.count(b'.'))
         
         print("Queue system: started new task")

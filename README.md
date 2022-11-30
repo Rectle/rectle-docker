@@ -1,15 +1,23 @@
 # Rectle Docker
-## 1. Setup
+## Setup
 
-### 1.1. Requirements
+### Requirements
 - [docker](https://www.docker.com/)
 - [python:^3.8](https://www.python.org/)
 
-### 1.2. Run
+### Installation
+
+```
+pip install -r ./subocker/requirements.txt
+```
+
+### Run
 
 #### RabbitMQ
 ```
+cd rabbitmq
 docker compose up
+cd ..
 ```
 
 #### Application

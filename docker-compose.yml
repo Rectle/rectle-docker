@@ -1,13 +1,7 @@
 version: '3.3'
 
 services:
-  rabbitmq:
-    image: rabbitmq:3.11-management
-    ports:
-        - 5672:5672
-        - 15672:15672
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
-      interval: 5s
-      timeout: 15s
-      retries: 1
+  aigym:
+    build: ./runtime-enviroment
+    volumes:
+      - ./runtime-enviroment/src:/app/src

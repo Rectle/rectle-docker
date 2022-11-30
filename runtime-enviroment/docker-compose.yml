@@ -1,7 +1,0 @@
-version: '3.3'
-
-services:
-  aigym:
-    build: ./
-    volumes:
-      - ./src:/app/src
