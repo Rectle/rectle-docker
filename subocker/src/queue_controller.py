@@ -2,12 +2,13 @@
 import pika
 import time
 from src.controllers.docker.main import Docker
+import os
 
 class QueueController:
     def __init__(self) -> None:
         print("Queue system: starting")
         self.docker = Docker()
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT')))
         self.channel = connection.channel()
         self.channel.queue_declare(queue='task_queue', durable=True)
         self.channel.basic_qos(prefetch_count=1)
