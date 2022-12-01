@@ -2,6 +2,6 @@ version: '3.3'
 
 services:
   aigym:
-    build: ./
+    build: ./runtime-enviroment
     volumes:
-      - ./src:/app/src
+      - ./runtime-enviroment/src:/app/src
