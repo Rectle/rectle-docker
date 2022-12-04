@@ -1,2 +1,4 @@
 pika
 python-on-whales
+firebase_admin
+zipfile
