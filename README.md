@@ -13,7 +13,7 @@ pip install -r ./subocker/requirements.txt
 ```
 
 2. 
-Update RabbitMQ configuration fields in `.env` file.
+Update RabbitMQ configuration fields in `.env` file in `subocker` directory.
 ```
 RABBITMQ_HOST="HOST ADDRESS HERE"
 RABBITMQ_PORT="PORT HERE"
