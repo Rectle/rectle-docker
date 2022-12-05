@@ -13,13 +13,6 @@ pip install -r ./subocker/requirements.txt
 
 ### Run
 
-#### RabbitMQ
-```
-cd rabbitmq
-docker compose up
-cd ..
-```
-
 #### Application
 ```
 python ./subocker/main.py
