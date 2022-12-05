@@ -3,8 +3,8 @@ import pika
 import sys
 import os
 
-credentials = pika.PlainCredentials("publisher", "123")
-connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost", credentials=credentials))
+credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT'), credentials=credentials))
 channel = connection.channel()
 
 channel.queue_declare(queue='task_queue', durable=True)
