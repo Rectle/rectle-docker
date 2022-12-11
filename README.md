@@ -7,18 +7,23 @@
 
 ### Installation
 
+1. Install dependecies
 ```
 pip install -r ./subocker/requirements.txt
 ```
 
-### Run
+2. 
+Create/update RabbitMQ configuration fields in `.env` file in `subocker` directory.
 
-#### RabbitMQ
 ```
-cd rabbitmq
-docker compose up
-cd ..
+# example
+RABBITMQ_HOST=localhost
+RABBITMQ_PORT=5672
+RABBITMQ_USER=guest
+RABBITMQ_PASS=guest
 ```
+
+### Run
 
 #### Application
 ```

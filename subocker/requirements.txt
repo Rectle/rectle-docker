@@ -1,4 +1,8 @@
 pika
 python-on-whales
+<<<<<<< HEAD
 firebase_admin
 zipfile
+=======
+dotenv
+>>>>>>> rabbitmq-config

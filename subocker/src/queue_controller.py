@@ -3,13 +3,16 @@ import pika
 import time
 from src.controllers.docker.main import Docker
 from .cloud_store import CloudStore
+import os
 
 class QueueController:
     def __init__(self) -> None:
         print("Queue system: starting")
         self.docker = Docker()
+        print(os.getenv('RABBITMQ_PASS'))
+        credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT'), credentials=credentials))
         self.cloudstore = CloudStore("subocker/rectle-platform-63c7ef33e4e4.json", "subocker-projects")
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = connection.channel()
         self.channel.queue_declare(queue='task_queue', durable=True)
         self.channel.basic_qos(prefetch_count=1)
