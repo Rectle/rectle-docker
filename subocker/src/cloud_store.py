@@ -1,13 +1,14 @@
-import firebase_admin
+import os
 import zipfile
-from firebase_admin import credentials, storage
+from google.cloud import storage
 
+PROJECT_ID = "rectle-platform"
 
-class FireStore:
+class CloudStore:
     def __init__(self, key_path, bucket_name):
-        self.cred = credentials.Certificate(key_path)
-        firebase_admin.initialize_app(self.cred, {'storageBucket': bucket_name})
-        self.bucket = storage.bucket()
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = key_path
+        self.client = storage.Client(PROJECT_ID)
+        self.bucket = self.client.get_bucket(bucket_name)
 
     def upload(self, project_id, src_path):
         blob = self.bucket.blob("projectFiles/" + project_id + ".zip")
