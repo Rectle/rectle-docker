@@ -2,6 +2,7 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
+COPY src src
 COPY requirements.txt requirements.txt
 RUN apt-get update -y && apt-get install -y \
     xvfb

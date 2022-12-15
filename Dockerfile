@@ -3,6 +3,7 @@ FROM alpine:3
 LABEL maintainer="Rectle"
 
 # Copy source files
+WORKDIR /rectle
 COPY . .
 
 # Install python
