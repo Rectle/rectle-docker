@@ -24,13 +24,18 @@ RABBITMQ_PASS=guest
 ```
 
 ### Build
-
-### Run
 ```
 docker build . -t rectle-runner
 ```
 
-#### Application
+### Run
+
+#### Locally
+```
+python subocker/main.py
+```
+
+#### Docker
 ```
 docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
 ```
