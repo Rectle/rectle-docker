@@ -23,10 +23,14 @@ RABBITMQ_USER=guest
 RABBITMQ_PASS=guest
 ```
 
+### Build
+
 ### Run
+```
+docker build . -t rectle-runner
+```
 
 #### Application
 ```
-docker build . -t rectle-runner
 docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
 ```
