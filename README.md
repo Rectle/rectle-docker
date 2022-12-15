@@ -47,15 +47,15 @@ Linux
 ```
 docker service create \
     --name rectle \
+    --mount 'type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock' \
     --replicas 10 \
-    --rollback \
     --update-delay 10s \
     --update-parallelism 2 \
     rectle-runner
 ```
 Windows
 ```
-docker service create --name rectle --replicas 10 --rollback --update-delay 10s --update-parallelism 2 rectle-runner
+docker service create --name rectle --mount 'type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock' --replicas 10 --update-delay 10s --update-parallelism 2 rectle-runner
 ```
 
 ##### Remove
