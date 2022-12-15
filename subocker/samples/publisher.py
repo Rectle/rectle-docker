@@ -2,7 +2,11 @@
 import pika
 import sys
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+print(os.getenv("RABBITMQ_HOST"))
 credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT'), credentials=credentials))
 channel = connection.channel()

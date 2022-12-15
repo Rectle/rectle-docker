@@ -27,5 +27,6 @@ RABBITMQ_PASS=guest
 
 #### Application
 ```
-python ./subocker/main.py
+docker build . -t rectle-runner
+docker run --privileged -d --name rectle rectle-runner
 ```
