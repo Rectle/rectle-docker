@@ -57,6 +57,10 @@ Windows
 ```
 docker service create --name rectle --mount 'type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock' --replicas 10 --update-delay 10s --update-parallelism 2 rectle-runner
 ```
+##### Scale
+```
+docker service scale rectle=20
+```
 
 ##### Remove
 ```
