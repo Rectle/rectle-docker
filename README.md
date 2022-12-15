@@ -28,5 +28,5 @@ RABBITMQ_PASS=guest
 #### Application
 ```
 docker build . -t rectle-runner
-docker run --privileged -d --name rectle rectle-runner
+docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
 ```
