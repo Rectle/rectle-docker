@@ -30,7 +30,7 @@ docker build . -t rectle-runner
 
 ### Run
 
-#### Locally
+#### Local
 ```
 python subocker/main.py
 ```
@@ -38,4 +38,27 @@ python subocker/main.py
 #### Docker
 ```
 docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
+```
+
+#### Swarm
+##### Create service
+
+Linux
+```
+docker service create \
+    --name rectle \
+    --replicas 10 \
+    --rollback \
+    --update-delay 10s \
+    --update-parallelism 2 \
+    rectle-runner
+```
+Windows
+```
+docker service create --name rectle --replicas 10 --rollback --update-delay 10s --update-parallelism 2 rectle-runner
+```
+
+##### Remove
+```
+docker service remove rectle
 ```
