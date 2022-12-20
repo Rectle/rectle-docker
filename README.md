@@ -23,9 +23,46 @@ RABBITMQ_USER=guest
 RABBITMQ_PASS=guest
 ```
 
+### Build
+```
+docker build . -t rectle-runner
+```
+
 ### Run
 
-#### Application
+#### Local
 ```
-python ./subocker/main.py
+python subocker/main.py
+```
+
+#### Docker
+```
+docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
+```
+
+#### Swarm
+##### Create service
+
+Linux
+```
+docker service create \
+    --name rectle \
+    --mount 'type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock' \
+    --replicas 10 \
+    --update-delay 10s \
+    --update-parallelism 2 \
+    rectle-runner
+```
+Windows
+```
+docker service create --name rectle --mount 'type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock' --replicas 10 --update-delay 10s --update-parallelism 2 rectle-runner
+```
+##### Scale
+```
+docker service scale rectle=20
+```
+
+##### Remove
+```
+docker service remove rectle
 ```

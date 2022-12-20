@@ -1,3 +1,3 @@
 pika
 python-on-whales
-dotenv
+python-dotenv
