@@ -2,12 +2,14 @@
 import pika
 import time
 from src.controllers.docker.main import Docker
+from src.cloud_storage_controller import CloudStorage
 import os
 
 class QueueController:
     def __init__(self) -> None:
         print("Queue system: starting")
         self.docker = Docker()
+        self.cloud_storage = CloudStorage()
         credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT'), credentials=credentials))
         self.channel = connection.channel()
@@ -21,12 +23,16 @@ class QueueController:
 
     def callback(self, ch, method, properties, body):
         print("Queue system: received task")
-        # print(ch, method, body)
         time.sleep(body.count(b'.'))
+
+        print("Queue system: downloading required files")
+        # self.cloud_storage.import_file(body.decode('ascii'), "runtime-enviroment/src/code.py")
         
         print("Queue system: started new task")
         self.docker.run()
+
         print("Queue system: finished new task")
         ch.basic_ack(delivery_tag=method.delivery_tag)
+
         print("Queue system: sent task response")
 
