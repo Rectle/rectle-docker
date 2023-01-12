@@ -28,6 +28,17 @@ RABBITMQ_PASS=guest
 docker build . -t rectle-runner
 ```
 
+## Test Run
+1. Populate rabbit queue with sample code
+```
+python subocker/sample/publisher.py
+```
+
+2. Run queue controller
+```
+python subocker/main.py
+```
+
 ### Run
 
 #### Local

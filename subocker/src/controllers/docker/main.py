@@ -2,12 +2,13 @@ from python_on_whales import DockerClient
 from uuid import uuid4
 
 class Docker:
-    def __init__(self, uuid: str = None) -> None:
+    def __init__(self, uuid: str = None, env_path: str = None) -> None:
         project_name = f'rectle-docker-{uuid if uuid is not None else str(uuid4())}'
         self.docker = DockerClient(
                             compose_files=["./client-compose.yml"],
                             compose_project_name=project_name, 
-                            compose_project_directory=None
+                            compose_project_directory=None,
+                            compose_env_file=env_path
                             )
 
     def get_containers(self) -> list:

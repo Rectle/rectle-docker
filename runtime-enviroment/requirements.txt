@@ -1,7 +1,8 @@
-gym
-box2d 
-pygame
-pyvirtualdisplay
-atari_py 
-pystan
-pipreqs
+# gym
+# box2d 
+# pygame
+# pyvirtualdisplay
+# atari_py 
+# pystan
+# pipreqs
+google-cloud-storage
