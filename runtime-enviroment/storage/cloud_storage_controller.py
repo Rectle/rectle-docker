@@ -1,4 +1,5 @@
 from google.cloud import storage
+from zipfile import ZipFile
 import os
 
 class CloudStorage:
@@ -17,6 +18,11 @@ class CloudStorage:
         file = self.bucket.blob(source)
         file.download_to_filename(dest)
 
-storage = CloudStorage()
-storage.import_file(os.environ.get('FILE_PATH'), "../src/code.py")
+
+if __name__ == "__main__":
+    path_to_zipfile = "../src/files.zip"
+    storage = CloudStorage()
+    storage.import_file(os.environ.get('FILE_PATH'), path_to_zipfile)
+    with ZipFile(path_to_zipfile, 'r') as zip_ref:
+        zip_ref.extractall("../src/")
 
