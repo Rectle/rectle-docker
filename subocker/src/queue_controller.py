@@ -3,11 +3,11 @@ import pika
 import time
 from src.controllers.docker.main import Docker
 import os
+import json
 
 class QueueController:
     def __init__(self) -> None:
         print("Queue system: starting")
-        self.docker = Docker()
         credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), port=os.getenv('RABBITMQ_PORT'), credentials=credentials))
         self.channel = connection.channel()
@@ -19,14 +19,34 @@ class QueueController:
         self.channel.basic_consume(queue='task_queue', on_message_callback=self.callback)
         self.channel.start_consuming()
 
+    @staticmethod
+    def set_environment(body: str) -> str:
+        arg = json.loads(body)
+        dir = "clients-enviroment/"
+        path = os.path.join(dir, arg["project_name"])
+
+        try:
+            os.mkdir(path)
+        except:
+            print("Directory already exist")
+
+        f = open(dir + arg["project_name"] + "/.env", "w")
+        f.write("FILE_PATH="+ arg["path"])
+
+        return dir + arg["project_name"] + "/.env"
+
+
     def callback(self, ch, method, properties, body):
         print("Queue system: received task")
-        # print(ch, method, body)
         time.sleep(body.count(b'.'))
-        
+
         print("Queue system: started new task")
-        self.docker.run()
+        env_path = self.set_environment(body.decode('ascii'))
+        docker = Docker(env_path=env_path)
+        docker.run()
+
         print("Queue system: finished new task")
         ch.basic_ack(delivery_tag=method.delivery_tag)
+
         print("Queue system: sent task response")
 

@@ -28,6 +28,19 @@ RABBITMQ_PASS=guest
 docker build . -t rectle-runner
 ```
 
+## Test Run
+1. Add google.cloud credentials to runtime-enviroment/storage and address them in cloud_storage_controller script or name them subocker_credentials
+
+2. Populate rabbit queue with sample code
+```
+python subocker/sample/publisher.py
+```
+
+3. Run queue controller
+```
+python subocker/main.py
+```
+
 ### Run
 
 #### Local
