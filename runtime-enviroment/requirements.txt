@@ -4,5 +4,4 @@
 # pyvirtualdisplay
 # atari_py 
 # pystan
-# pipreqs
-google-cloud-storage
+pipreqs

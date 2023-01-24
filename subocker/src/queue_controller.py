@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import pika
 import time
-from src.controllers.docker.main import Docker
+from .docker_controller import Docker
 import os
 import json
 
@@ -22,7 +22,7 @@ class QueueController:
     @staticmethod
     def set_environment(body: str) -> str:
         arg = json.loads(body)
-        dir = "clients-enviroment/"
+        dir = "project-config/"
         path = os.path.join(dir, arg["project_name"])
 
         try:

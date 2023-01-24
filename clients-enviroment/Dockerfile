@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY src src
 COPY requirements.txt requirements.txt
-RUN apt-get update -y && apt-get install -y xvfb
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN sed -i -e 's/\r$//' src/start.sh
