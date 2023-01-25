@@ -22,3 +22,10 @@ class Docker:
             print(str(line.decode('ascii')), end='')
 
         return True
+
+    def down(self) -> bool:
+        try:
+            self.docker.compose.down(remove_orphans=False, remove_images=None, timeout=None, volumes=False, quiet=False)
+        except:
+            return False
+        return True

@@ -44,9 +44,8 @@ class QueueController:
         env_path = self.set_environment(body.decode('ascii'))
         docker = Docker(env_path=env_path)
         docker.run()
-
         print("Queue system: finished new task")
         ch.basic_ack(delivery_tag=method.delivery_tag)
-
+        docker.down()
         print("Queue system: sent task response")
 
