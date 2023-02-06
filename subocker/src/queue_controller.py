@@ -21,19 +21,20 @@ class QueueController:
 
     @staticmethod
     def set_environment(body: str) -> str:
-        arg = json.loads(body)
+        # arg = json.loads(body)
+        id = body
         dir = "project-config/"
-        path = os.path.join(dir, arg["project_name"])
+        path = os.path.join(dir, id)
 
         try:
             os.mkdir(path)
         except:
             print("Directory already exist")
 
-        f = open(dir + arg["project_name"] + "/.env", "w")
-        f.write("FILE_PATH="+ arg["path"])
+        f = open(dir + id + "/.env", "w")
+        f.write("FILE_PATH=projectFiles/" + id)
 
-        return dir + arg["project_name"] + "/.env"
+        return dir + id + "/.env"
 
 
     def callback(self, ch, method, properties, body):
