@@ -13,6 +13,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             
             env = Environment(project_name)
             env.build_env()
+            env.run()
         else:
             super().do_GET()
 

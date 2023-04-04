@@ -3,6 +3,8 @@ import time
 import os
 import stat
 import requests
+import shutil
+import subprocess
 from requests.adapters import HTTPAdapter, Retry
 
 class QueueController:
@@ -41,10 +43,11 @@ class QueueController:
 
         try:
             os.makedirs(path, exist_ok = True)
-            open(path + '/' + project_name + ".txt", "w")
-            os.chmod(path + '/' + project_name + ".txt", stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
         except OSError as error:
             print("Directory '%s' can not be created" % path)
+
+        shutil.copyfile('test-enviroments/CartPole/main.py', path + '/main.py')
+        os.chmod(path + '/main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
 
 
     def callback(self, ch, method, properties, body):
