@@ -4,15 +4,14 @@ import venv
 
 
 class Environment:
-    def __init__(self, project_name):
-        self.project_name = project_name
-        self.venv_dir = f'env/{project_name}'
-        self.activate_script = f'{self.venv_dir}/bin/activate'
-        venv.create(self.venv_dir, with_pip=True)
+    def __init__(self):
+        self.venv_dir = f'venv/'
+        self.activate_script = self.venv_dir + f'/bin/activate'
+        venv.create(self.venv_dir, with_pip=True, clear=False)
         
-    def run(self):
+    def run(self, project_name):
         try:
-            subprocess.run(f'. {self.activate_script} && python -u volume/{self.project_name}/main.py', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && python -u volume/{project_name}/main.py', shell=True, check=True)
         except Exception as e:
             print("Run failed")
             print(e)
@@ -21,12 +20,17 @@ class Environment:
     def build_env(self):
         try:
             subprocess.run(f'. {self.activate_script} && python -m pip install --upgrade pip', shell=True, check=True)
-            packages = ['requests', 'numpy', 'gym[classic_control]', 'tensorflow-datasets', 'gym', 'gym-notices']
+            subprocess.run(f'. {self.activate_script} && pip install -r src/requirements.txt', shell=True, check=True)
             subprocess.run(f'. {self.activate_script} && pip install pipreqs', shell=True, check=True)
-            subprocess.run(f'. {self.activate_script} && pipreqs volume/{self.project_name}', shell=True, check=True)
-            subprocess.run(f'. {self.activate_script} && pip install -r volume/{self.project_name}/requirements.txt', shell=True, check=True)
-            subprocess.run(f'. {self.activate_script} && pip install {" ".join(packages)}', shell=True, check=True)
-            subprocess.run(f'. {self.activate_script} && pip freeze', shell=True, check=True)
         except Exception as e:
             print("Env build failed")
+            print(e)
+
+    def add_project_dependencies(self, project_name):
+        try:
+            subprocess.run(f'. {self.activate_script} && pipreqs --local --savepath requirements.txt volume/{project_name}', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && pip install -r {self.venv_dir}/requirements.txt', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && pip freeze', shell=True, check=True) # lists requirements
+        except Exception as e:
+            print("Failed while adding project {project_name} dependencies")
             print(e)

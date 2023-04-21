@@ -66,6 +66,7 @@ class QueueController:
         # - make bullet proof request sent + received msg
         # - add waiting for the response from podman container after everything is built or if error occured
         url = 'http://host.docker.internal:42069/start_process/' + project_name
+
         try:
             response = requests.get(url)
             print(response.json)

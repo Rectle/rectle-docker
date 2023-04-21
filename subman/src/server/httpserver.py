@@ -3,7 +3,7 @@ import socketserver
 from project_env.environment import Environment
 
 
-class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+class RequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith('/start_process'):
             project_name = self.path.split('/start_process/')[1]
@@ -11,18 +11,18 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             
-            env = Environment(project_name)
-            env.build_env()
-            env.run()
+            venv = Environment()
+            venv.add_project_dependencies(project_name)
+            venv.run(project_name)
         else:
             super().do_GET()
 
 class Server():
     def __init__(self, port=42069):
         self.port = port
-        self.handler_object = MyHttpRequestHandler
+        self.handler_object = RequestHandler
         self.server = socketserver.TCPServer(("", self.port), self.handler_object)
         print(f"Server started on port {self.port}")
 
-    def start_listening(self):
+    def start_comunication(self):
         self.server.serve_forever()
