@@ -6,6 +6,7 @@ import requests
 import shutil
 import subprocess
 from requests.adapters import HTTPAdapter, Retry
+from httpserver.httpserver import Server
 
 class QueueController:
     def __init__(self) -> None:
@@ -51,27 +52,30 @@ class QueueController:
 
 
     def callback(self, ch, method, properties, body):
+        project_name = body.decode('ascii')
+
         print("Queue system: received task")
         
         time.sleep(3)
         print(body)
 
         print("Queue system: started new task")
-        self. prepare_project(body.decode('ascii'))
+        self. prepare_project(project_name)
 
         # TODO
         # - make bullet proof request sent + received msg
         # - add waiting for the response from podman container after everything is built or if error occured
-        # - whole we have a http server maybe add additional end-points for error handling 
-        url = 'http://host.docker.internal:42069/start_process/' + body.decode('ascii')
+        url = 'http://host.docker.internal:42069/start_process/' + project_name
         try:
             response = requests.get(url)
             print(response.json)
+            print("Queue stystem: Enviroment is being built")
         except Exception as e:
             print("Response failed")
             print(e)
 
         print("Queue system: finished new task")
+
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
         print("Queue system: sent task response")

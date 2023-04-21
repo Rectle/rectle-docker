@@ -8,7 +8,4 @@ if __name__ == "__main__":
     queue.run()
 
 # TODO
-# - add log handling
-# - safe container turn down
-# - discuss of building an virt env in docker container 
-# - discuss code preprocess and change chmod of shared files in a volume
+# - safe container turn-down
