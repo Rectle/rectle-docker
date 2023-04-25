@@ -1,9 +1,4 @@
 requests
 gym[classic_control]
-gym
-gym-notices
-numpy
-tensorflow-datasets
 tensorflow
-tensorRT
 Pillow

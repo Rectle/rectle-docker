@@ -8,6 +8,9 @@ import subprocess
 from requests.adapters import HTTPAdapter, Retry
 from httpserver.httpserver import Server
 
+PODMAN_URL = "http://host.docker.internal:42069" 
+
+
 class QueueController:
     def __init__(self) -> None:
         print("Queue system: starting")
@@ -53,11 +56,23 @@ class QueueController:
 
 
     @staticmethod
-    def send_to_podman(project_name):
-        url = 'http://host.docker.internal:42069/start_process/' + project_name
-
+    def podman_healthcheck():
+        url = PODMAN_URL + '/healthcheck'
         try:
-            print("Queue stystem: connecting to execution container")
+            response = requests.get(url)
+            if response.status_code == 200:
+                return True
+        except Exception as e:
+            print("Podman container fialed healthcheck")
+            
+        return False
+
+
+    @staticmethod
+    def send_to_podman(project_name):
+        url = PODMAN_URL + '/start_process/' + project_name
+        
+        try:
             response = requests.get(url)
             print("Queue stystem: project executed")
             return response
@@ -77,11 +92,17 @@ class QueueController:
         print("Queue system: started new task")
         self.prepare_project(project_name)
 
-        response = self.send_to_podman(project_name)
+        print("Queue system: connecting to execution container")
+        
+        if self.podman_healthcheck():
+            print("Queue system: sending project info")
+            response = self.send_to_podman(project_name)
 
-        if(response.status_code == 200):
-            print("Queue system: finished new task")
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            print("Queue system: sent task response")
+            if response.status_code == 200:
+                print("Queue system: finished new task")
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+                print("Queue system: sent task response")
+            else:
+                print("Queue system: task execution failed")
         else:
-            print("Queue system: task execution failed")
+            pass
