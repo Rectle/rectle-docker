@@ -7,13 +7,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith('/start_process'):
             project_name = self.path.split('/start_process/')[1]
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
             
             venv = Environment()
             venv.add_project_dependencies(project_name)
             venv.run(project_name)
+            print("Task finished")
+
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
         else:
             super().do_GET()
 

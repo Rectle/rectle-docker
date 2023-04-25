@@ -57,11 +57,12 @@ class QueueController:
         url = 'http://host.docker.internal:42069/start_process/' + project_name
 
         try:
+            print("Queue stystem: connecting to execution container")
             response = requests.get(url)
-            print(response.json)
-            print("Queue stystem: Enviroment is being built")
+            print("Queue stystem: project executed")
+            return response
         except Exception as e:
-            print("Response failed")
+            print("Queue stystem: execution container failed")
             print(e)
 
 
@@ -76,13 +77,11 @@ class QueueController:
         print("Queue system: started new task")
         self.prepare_project(project_name)
 
-        # TODO
-        # - make bullet proof request sent + received msg
-        # - add waiting for the response from podman container after everything is built or if error occured
-        self.send_to_podman(project_name)
+        response = self.send_to_podman(project_name)
 
-        print("Queue system: finished new task")
-
-        ch.basic_ack(delivery_tag=method.delivery_tag)
-
-        print("Queue system: sent task response")
+        if(response.status_code == 200):
+            print("Queue system: finished new task")
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+            print("Queue system: sent task response")
+        else:
+            print("Queue system: task execution failed")
