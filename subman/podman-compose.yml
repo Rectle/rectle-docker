@@ -7,4 +7,3 @@ services:
       - 42069:42069
     volumes:
     - "../volume:/app/volume"
-    - "./src:/app/src"

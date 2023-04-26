@@ -6,4 +6,3 @@ services:
     volumes:
     - "../volume:/app/volume"
     - "../test-enviroments:/app/test-enviroments"
-    - "./src:/app/src" #only for testing
