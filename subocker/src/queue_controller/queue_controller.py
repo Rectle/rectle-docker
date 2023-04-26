@@ -7,6 +7,8 @@ import shutil
 import subprocess
 from requests.adapters import HTTPAdapter, Retry
 from httpserver.httpserver import Server
+from zipfile import ZipFile
+
 
 PODMAN_URL = "http://host.docker.internal:42069" 
 
@@ -48,11 +50,20 @@ class QueueController:
 
         try:
             os.makedirs(path, exist_ok = True)
+            os.makedirs(path + '/gifs', exist_ok = True)
         except OSError as error:
             print("Directory '%s' can not be created" % path)
 
-        shutil.copyfile('test-enviroments/CartPole/main.py', path + '/main.py')
-        os.chmod(path + '/main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+        path += '/'
+
+        shutil.copyfile('test-enviroments/CartPole/CartPole_simulation.zip', path + 'CartPole_simulation.zip')
+        shutil.copyfile(f'test-enviroments/CartPole/{project_name}/trained_model.zip', path + 'trained_model.zip')
+        zip_extractor = ZipFile(path + '/CartPole_simulation.zip', 'r')
+        zip_extractor.extractall(path=path)
+        zip_extractor = ZipFile(path + '/trained_model.zip')
+        zip_extractor.extractall(path=path)
+
+        os.chmod(path + 'main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
 
 
     @staticmethod

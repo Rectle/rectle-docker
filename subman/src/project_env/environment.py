@@ -22,7 +22,7 @@ class Environment:
 
     def run(self, project_name):
         try:
-            subprocess.run(f'. {self.activate_script} && python -u volume/{project_name}/main.py', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && python -u volume/{project_name}/main.py volume/{project_name}/', shell=True, check=True)
         except Exception as e:
             print("Run failed")
             print(e)

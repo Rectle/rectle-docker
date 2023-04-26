@@ -1,4 +1,5 @@
 import gym
+import sys
 import numpy as np
 import tensorflow as tf
 from keras import models
@@ -36,7 +37,7 @@ def render_episodes(env: gym.Env, model: tf.keras.Model, max_steps: int, episode
     return episodes_images
 
 
-model = models.load_model('volume/project2/trained_model/')
+model = models.load_model(str(sys.argv[1]) + 'trained_model/')
 # Save GIF image
 min_episodes_criterion = 100
 max_episodes = 2
@@ -44,6 +45,6 @@ max_steps_per_episode = 1000
 images = render_episodes(render_env, model, max_steps_per_episode, max_episodes)
 # loop=0: loop forever, duration=1: play each frame for 1ms
 for e in range(0, max_episodes):
-    image_file = f'volume/project2/gifs/cartpole-v{e + 1}.gif'
+    image_file = str(sys.argv[1]) + f'gifs/cartpole-v{e + 1}.gif'
     images[e][0].save(
         image_file, save_all=True, append_images=images[e][1:], loop=0, duration=0.5)
