@@ -64,6 +64,7 @@ class QueueController:
         zip_extractor.extractall(path=path)
 
         os.chmod(path + 'main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+        os.chmod(path + 'gifs', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
 
 
     @staticmethod
@@ -74,8 +75,21 @@ class QueueController:
             if response.status_code == 200:
                 return True
         except Exception as e:
-            print("Podman container fialed healthcheck")
+            print("Podman container failed healthcheck")
             
+        return False
+
+    
+    def podman_healthcheck_procedure(self, time_in_sec=30, check_delay=10):
+        tries = int(time_in_sec / check_delay)
+        for t in range(tries):
+            print(f"Podman container: Try {t + 1}/{tries}")
+            if self.podman_healthcheck():
+                return True
+            else:
+                time.sleep(check_delay)
+
+        print("Podman container: Container unreachable")
         return False
 
 
@@ -105,7 +119,7 @@ class QueueController:
 
         print("Queue system: connecting to execution container")
         
-        if self.podman_healthcheck():
+        if self.podman_healthcheck_procedure():
             print("Queue system: sending project info")
             response = self.send_to_podman(project_name)
 
@@ -116,4 +130,6 @@ class QueueController:
             else:
                 print("Queue system: task execution failed")
         else:
-            pass
+            print("Queue system: Task failed")
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+            print("Queue system: Sending task back to the queue")
