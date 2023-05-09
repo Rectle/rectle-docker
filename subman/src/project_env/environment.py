@@ -20,20 +20,18 @@ class Environment:
             print(e)
 
 
-    def run(self, project_name):
+    def run(self):
         try:
-            subprocess.run(f'. {self.activate_script} && python -u volume/{project_name}/main.py volume/{project_name}/', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && python -u volume/project/main.py volume/project/', shell=True, check=True)
         except Exception as e:
             print("Run failed")
             print(e)
 
 
-    def add_project_dependencies(self, project_name):
+    def add_project_dependencies(self):
         try:
-            pass
-            # subprocess.run(f'. {self.activate_script} && pipreqs --local --savepath requirements.txt volume/{project_name}', shell=True, check=True)
-            # subprocess.run(f'. {self.activate_script} && pip install -r {self.venv_dir}/requirements.txt', shell=True, check=True)
-            # subprocess.run(f'. {self.activate_script} && pip freeze', shell=True, check=True) # lists requirements
+            subprocess.run(f'. {self.activate_script} && pipreqs --savepath requirements.txt volume/project', shell=True, check=True)
+            subprocess.run(f'. {self.activate_script} && pip install -r requirements.txt', shell=True, check=True)
         except Exception as e:
-            print("Failed while adding project {project_name} dependencies")
+            print("Failed while adding project dependencies")
             print(e)

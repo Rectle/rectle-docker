@@ -3,6 +3,9 @@
 
 ### Requirements
 - [docker](https://www.docker.com/)
+- [docker compose](https://docs.docker.com/compose/)
+- [podman](https://podman.io/)
+- [podman compose](https://github.com/containers/podman-compose)
 - [python:^3.8](https://www.python.org/)
 
 ### Installation
@@ -13,7 +16,7 @@ pip install -r ./subocker/requirements.txt
 ```
 
 2. 
-Create/update RabbitMQ configuration fields in `.env` file in `subocker` directory.
+Create/update RabbitMQ configuration fields in `.env` file in `subocker/src` directory.
 
 ```
 # example
@@ -23,34 +26,21 @@ RABBITMQ_USER=guest
 RABBITMQ_PASS=guest
 ```
 
-### Build
-```
-docker build . -t rectle-runner
-```
-
-## Test Run
-1. Add google.cloud credentials to runtime-enviroment/storage and address them in cloud_storage_controller script or name them subocker_credentials
-
-2. Populate rabbit queue with sample code
-```
-python subocker/sample/publisher.py
-```
-
-3. Run queue controller
-```
-python subocker/main.py
-```
+3.
+Add Cloud Storage crudentials json file as `subocker_credentials.json` in `subocker/src` directory.
 
 ### Run
 
-#### Local
-```
-python subocker/main.py
-```
-
 #### Docker
 ```
-docker run --restart always -v /var/run/docker.sock:/var/run/docker.sock -d --name rectle rectle-runner
+cd subocker/
+docker compose up --build
+```
+
+#### Podman
+```
+cd subman/
+podman_compose up --build
 ```
 
 #### Swarm

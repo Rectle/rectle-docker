@@ -1,13 +1,13 @@
 import pika
 import time
 import os
+import shutil
 import stat
 import requests
 import shutil
-import subprocess
-from requests.adapters import HTTPAdapter, Retry
-from httpserver.httpserver import Server
+import json
 from zipfile import ZipFile
+from cloud_storage.cloud_storage_controller import CloudStorage
 
 
 PODMAN_URL = "http://host.docker.internal:42069" 
@@ -44,28 +44,35 @@ class QueueController:
         self.channel.start_consuming()
 
 
-    @staticmethod
-    def prepare_project(project_name):
-        path = "volume/" + project_name
+    def prepare_project(self, simulation_name, project_name):
+        path = "volume/project" 
 
-        try:
-            os.makedirs(path, exist_ok = True)
-            os.makedirs(path + '/gifs', exist_ok = True)
-        except OSError as error:
-            print("Directory '%s' can not be created" % path)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        
+        os.makedirs(path, exist_ok = True)
+        os.makedirs(path + '/gifs', exist_ok = True)
+        
+        simulation_src = f"{simulation_name}/simulation.zip"
+        simulation_dest = path + f"/simulation.zip"
+        project_src = f"{simulation_name}/{project_name}/trained_model.zip"
+        project_dest = path + f"/trained_model.zip"
 
-        path += '/'
+        storage = CloudStorage()
+        storage.import_file(simulation_src, simulation_dest)
+        storage.import_file(project_src, project_dest)
 
-        shutil.copyfile('test-enviroments/CartPole/CartPole_simulation.zip', path + 'CartPole_simulation.zip')
-        shutil.copyfile(f'test-enviroments/CartPole/{project_name}/trained_model.zip', path + 'trained_model.zip')
-        zip_extractor = ZipFile(path + '/CartPole_simulation.zip', 'r')
+        zip_extractor = ZipFile(simulation_dest, 'r')
         zip_extractor.extractall(path=path)
-        zip_extractor = ZipFile(path + '/trained_model.zip')
+        zip_extractor = ZipFile(project_dest)
         zip_extractor.extractall(path=path)
 
-        os.chmod(path + 'main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
-        os.chmod(path + 'gifs', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+        os.remove(simulation_dest)
+        os.remove(project_dest)
 
+        os.chmod(path + '/main.py', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+        os.chmod(path + '/gifs', stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+        
 
     @staticmethod
     def podman_healthcheck():
@@ -78,7 +85,7 @@ class QueueController:
             print("Podman container failed healthcheck")
             
         return False
-
+    
     
     def podman_healthcheck_procedure(self, time_in_sec=30, check_delay=10):
         tries = int(time_in_sec / check_delay)
@@ -94,8 +101,8 @@ class QueueController:
 
 
     @staticmethod
-    def send_to_podman(project_name):
-        url = PODMAN_URL + '/start_process/' + project_name
+    def send_to_podman():
+        url = PODMAN_URL + '/start_process'
         
         try:
             response = requests.get(url)
@@ -107,21 +114,18 @@ class QueueController:
 
 
     def callback(self, ch, method, properties, body):
-        project_name = body.decode('ascii')
-
+        task = body.decode('ascii').replace("'", '"')
+        task = json.loads(task)
         print("Queue system: received task")
         
-        time.sleep(3)
-        print(body)
-
-        print("Queue system: started new task")
-        self.prepare_project(project_name)
+        print("Queue system: started new task {0}/{1}".format(task['simulation_name'], task['project_name']))
+        self.prepare_project(task['simulation_name'], task['project_name'])
 
         print("Queue system: connecting to execution container")
         
         if self.podman_healthcheck_procedure():
             print("Queue system: sending project info")
-            response = self.send_to_podman(project_name)
+            response = self.send_to_podman()
 
             if response.status_code == 200:
                 print("Queue system: finished new task")

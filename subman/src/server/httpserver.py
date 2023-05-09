@@ -6,11 +6,9 @@ from project_env.environment import Environment
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith('/start_process'):
-            project_name = self.path.split('/start_process/')[1]
-            
             venv = Environment()
-            venv.add_project_dependencies(project_name)
-            venv.run(project_name)
+            venv.add_project_dependencies()
+            venv.run()
             print("Task finished")
 
             self.send_response(200)
