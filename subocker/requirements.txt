@@ -1,3 +1,4 @@
 pika
-python-on-whales
 python-dotenv
+requests
+google-cloud

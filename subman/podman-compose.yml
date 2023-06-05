@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  controller:
+    build: .
+    ports:
+      - 42069:42069
+    volumes:
+    - "../volume:/app/volume"
+#    - "./src:/app/src"          # for testing

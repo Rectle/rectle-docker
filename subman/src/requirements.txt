@@ -1,0 +1,4 @@
+requests
+gym[classic_control]
+tensorflow
+Pillow

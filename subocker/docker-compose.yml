@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  controller:
+    build: .
+    volumes:
+    - "../volume:/app/volume"
+    - "../test-enviroments:/app/test-enviroments"
+#    - "./src:/app/src"                            #for testing
