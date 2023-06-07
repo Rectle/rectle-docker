@@ -1,4 +1,4 @@
 pika
 python-dotenv
 requests
-google-cloud
+google-cloud-storage

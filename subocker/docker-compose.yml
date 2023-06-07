@@ -5,5 +5,4 @@ services:
     build: .
     volumes:
     - "../volume:/app/volume"
-    - "../test-enviroments:/app/test-enviroments"
-#    - "./src:/app/src"                            #for testing
+    - "./src:/app/src"                            #for testing

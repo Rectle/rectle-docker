@@ -44,7 +44,7 @@ class QueueController:
         self.channel.start_consuming()
 
 
-    def prepare_project(self, simulation_name, project_name):
+    def prepare_project(self, project_id, model_id):
         path = "volume/project" 
 
         if os.path.isdir(path):
@@ -53,10 +53,10 @@ class QueueController:
         os.makedirs(path, exist_ok = True)
         os.makedirs(path + '/gifs', exist_ok = True)
         
-        simulation_src = f"{simulation_name}/simulation.zip"
-        simulation_dest = path + f"/simulation.zip"
-        project_src = f"{simulation_name}/{project_name}/trained_model.zip"
-        project_dest = path + f"/trained_model.zip"
+        simulation_src = f"projects/{project_id}/code.zip"
+        simulation_dest = path + f"/code.zip"
+        project_src = f"projects/{project_id}/models/{model_id}/model.zip"
+        project_dest = path + f"/model.zip"
 
         storage = CloudStorage()
         storage.import_file(simulation_src, simulation_dest)
@@ -118,8 +118,8 @@ class QueueController:
         task = json.loads(task)
         print("Queue system: received task")
         
-        print("Queue system: started new task {0}/{1}".format(task['simulation_name'], task['project_name']))
-        self.prepare_project(task['simulation_name'], task['project_name'])
+        print("Queue system: started new task {0}/{1}".format(task['project_id'], task['model_id']))
+        self.prepare_project(task['project_id'], task['model_id'])
 
         print("Queue system: connecting to execution container")
         
