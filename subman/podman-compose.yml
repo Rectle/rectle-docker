@@ -5,6 +5,7 @@ services:
     build: .
     ports:
       - 42069:42069
+    network_mode: host
     volumes:
     - "../volume:/app/volume"
     - "./src:/app/src"          # for testing
