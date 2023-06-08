@@ -8,4 +8,4 @@ services:
     network_mode: host
     volumes:
     - "../volume:/app/volume"
-    - "./src:/app/src"          # for testing
+    # - "./src:/app/src"          # for testing
