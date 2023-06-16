@@ -4,8 +4,8 @@ services:
   controller:
     build: .
     ports:
-      - 42069:42069
+      - 8081:8081
     network_mode: host
     volumes:
     - "../volume:/app/volume"
-    # - "./src:/app/src"          # for testing
+    # - "./src:/app/src"          # for testingg

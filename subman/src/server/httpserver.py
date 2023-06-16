@@ -23,7 +23,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
 class Server():
-    def __init__(self, port=42069):
+    def __init__(self, port=8086):
         self.port = port
         self.handler_object = RequestHandler
         self.server = socketserver.TCPServer(("", self.port), self.handler_object)

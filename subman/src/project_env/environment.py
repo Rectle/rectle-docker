@@ -1,6 +1,9 @@
 import sys
 import subprocess
 import venv
+import threading
+
+from .socketClient import SocketClient
 
 
 class Environment:
@@ -14,7 +17,7 @@ class Environment:
     def build_env(self):
         try:
             subprocess.run(f'. {self.activate_script} && python -m pip install --upgrade pip', shell=True, check=True)
-            subprocess.run(f'. {self.activate_script} && pip install -r src/requirements.txt', shell=True, check=True)
+            # subprocess.run(f'. {self.activate_script} && pip install -r src/requirements.txt', shell=True, check=True)
 
         except Exception as e:
             print("Env build failed")
@@ -23,19 +26,44 @@ class Environment:
     def run(self):
         try:
             print("run started:")
-            process = subprocess.Popen([f'{self.bin_dir}python', '-u', 'volume/project/main.py', 'volume/project/'], stdout=subprocess.PIPE)
-            self.send_logs(process)
+            process = subprocess.Popen([f'{self.bin_dir}python', '-u', 'volume/project/main.py', 'volume/project/'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.send_stream(process)
         except Exception as e:
             print("Run failed")
             print(e)
 
-    def send_logs(self, process):
+    def send_stream(self, process):
+        client = SocketClient()
+        client.connect()
+        client.start_build()
+        errors_thread = threading.Thread(target=self.send_errors, args=(process, client))
+        logs_thread = threading.Thread(target=self.send_logs, args=(process, client))
+
+        errors_thread.start()
+        logs_thread.start()
+
+        errors_thread.join()
+        logs_thread.join()
+        client.disconnect()
+
+    def send_logs(self, process, client):
         try:
             while process.poll() is None:
                 output = process.stdout.readline()
                 if output:
-                    # TODO - add sending logs to the socket server
+                    client.send_log("LOGS: " + output.decode('ascii').strip())
                     print("LOGS: " + output.decode('ascii').strip())
+        except Exception as e:
+            print("Collecting output failed")
+            print(e)
+
+    def send_errors(self, process, client):
+        try:
+            while process.poll() is None:
+                errors = process.stderr.readline()
+                if errors:
+                    client.send_log("ERRORS: " + errors.decode('ascii').strip())
+                    print("ERRORS: " + errors.decode('ascii').strip())
         except Exception as e:
             print("Collecting output failed")
             print(e)
