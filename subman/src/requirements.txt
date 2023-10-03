@@ -1,5 +1,6 @@
 requests==2.31.0
 python-socketio==5.8.0
+python-socketio[client]
 websocket-client==1.5.3
 gym[classic_control]
 tensorflow==2.12.0

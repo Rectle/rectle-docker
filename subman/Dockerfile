@@ -4,7 +4,7 @@ WORKDIR /app
 COPY src src
 RUN apt update
 RUN pip install -r src/requests
-# ENTRYPOINT ["python", "src/main.py"]
+ENTRYPOINT ["python", "-u", "src/main.py"]
 
-# # for testing 
-ENTRYPOINT ["tail", "-f", "/dev/null"]          
+# for testing 
+# ENTRYPOINT ["tail", "-f", "/dev/null"]          

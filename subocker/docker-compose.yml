@@ -4,5 +4,7 @@ services:
   controller:
     build: .
     volumes:
-    - "../volume:/app/volume"
-    # - "./src:/app/src"                            #for testing
+      - "../volume:/app/volume"
+      - "./src:/app/src"                            #for testing
+    environment:
+      - PYTHONUNBUFFERED=1

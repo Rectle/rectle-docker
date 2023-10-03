@@ -10,7 +10,7 @@ from zipfile import ZipFile
 from cloud_storage.cloud_storage_controller import CloudStorage
 
 
-PODMAN_URL = "http://host.docker.internal:8081" 
+PODMAN_URL = "http://host.docker.internal:8082" 
 
 
 class QueueController:
@@ -25,11 +25,8 @@ class QueueController:
     def connect_to_rabbit():
         while True:
             try:
-                credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASS'))
-                connection = pika.BlockingConnection(pika.ConnectionParameters(
-                    host=os.getenv('RABBITMQ_HOST'), 
-                    port=os.getenv('RABBITMQ_PORT'), 
-                    credentials=credentials))
+                params = pika.URLParameters(os.getenv('RABBITMQ_URL'))
+                connection = pika.BlockingConnection(params)
                 channel = connection.channel()
                 return channel
             except Exception as e:
@@ -101,15 +98,15 @@ class QueueController:
 
 
     @staticmethod
-    def send_to_podman():
-        url = PODMAN_URL + '/start_process'
+    def send_to_podman(build_id):
+        url = PODMAN_URL + f'/start_process/{build_id}'
         
         try:
             response = requests.get(url)
-            print("Queue stystem: project executed")
+            print("Queue system: project executed")
             return response
         except Exception as e:
-            print("Queue stystem: execution container failed")
+            print("Queue system: execution container failed")
             print(e)
 
 
@@ -118,14 +115,14 @@ class QueueController:
         task = json.loads(task)
         print("Queue system: received task")
         
-        print("Queue system: started new task {0}/{1}".format(task['project_id'], task['model_id']))
-        self.prepare_project(task['project_id'], task['model_id'])
+        print("Queue system: started new task {0}/{1}".format(task['projectId'], task['modelId']))
+        self.prepare_project(task['projectId'], task['modelId'])
 
         print("Queue system: connecting to execution container")
         
         if self.podman_healthcheck_procedure():
             print("Queue system: sending project info")
-            response = self.send_to_podman()
+            response = self.send_to_podman(task['compilationId'])
 
             if response.status_code == 200:
                 print("Queue system: finished new task")
