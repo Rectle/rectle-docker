@@ -10,4 +10,4 @@ services:
       - "../volume:/app/volume"
     environment:
       - PYTHONUNBUFFERED=1
-      - "./src:/app/src"          # for testingg
+      - "./src:/app/src"          # for testing

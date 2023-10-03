@@ -9,13 +9,7 @@
 - [python:^3.8](https://www.python.org/)
 
 ### Installation
-
-1. Install dependecies
-```
-pip install -r ./subocker/requirements.txt
-```
-
-2. 
+1. 
 Create/update RabbitMQ configuration fields in `.env` file in `subocker/src` directory.
 
 ```
@@ -26,7 +20,7 @@ RABBITMQ_USER=guest
 RABBITMQ_PASS=guest
 ```
 
-3.
+2.
 Add Cloud Storage crudentials json file as `subocker_credentials.json` in `subocker/src` directory.
 
 ### Run
