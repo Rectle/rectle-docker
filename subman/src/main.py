@@ -6,7 +6,3 @@ env.build_env()
 
 server = Server()
 server.start_comunication()
-
-# TODO
-# - safe container turn-down
-# - sending log to docker container

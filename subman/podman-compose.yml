@@ -4,7 +4,10 @@ services:
   controller:
     build: .
     ports:
-      - 42069:42069
+      - 8081:8081
+    network_mode: host
     volumes:
-    - "../volume:/app/volume"
-#    - "./src:/app/src"          # for testing
+      - "../volume:/app/volume"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - "./src:/app/src"          # for testing

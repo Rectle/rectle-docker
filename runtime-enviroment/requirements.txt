@@ -1,7 +1,0 @@
-# gym
-# box2d 
-# pygame
-# pyvirtualdisplay
-# atari_py 
-# pystan
-pipreqs
