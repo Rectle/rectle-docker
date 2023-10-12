@@ -1,5 +1,6 @@
 import requests
 import socketio
+import os
 
 
 class SocketClient:
@@ -8,6 +9,9 @@ class SocketClient:
         self.server_url = server_url
         self.socket = None
         self.build_id = build_id
+        os.environ["BUILD_ID"] = build_id
+        os.environ["SECRET"] = self.secret
+        os.environ["SERVER_URL"] = server_url
 
     def get_secret(self):
         response = requests.get("http://localhost:8080")
