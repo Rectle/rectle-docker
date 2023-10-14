@@ -1,0 +1,4 @@
+pika
+python-dotenv
+requests
+google-cloud-storage
