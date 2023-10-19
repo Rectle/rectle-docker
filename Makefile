@@ -1,10 +1,11 @@
-build: build-docker build-podman
-
+build: build-podman build-docker
 build-docker: clean-docker
 	docker-compose -f subocker/docker-compose.yml up --build --detach
 
 build-podman: clean-podman
 	podman-compose -f subman/podman-compose.yml up --build --detach
+
+clean: clean-docker clean-podman
 
 clean-docker:
 	-docker container kill subocker-controller-1
