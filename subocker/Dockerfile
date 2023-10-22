@@ -2,8 +2,14 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-COPY src src
+RUN apt-get update
+RUN apt update
+RUN apt-get install -y git
 RUN pip install --upgrade pip
-RUN /usr/local/bin/python -m pip install --upgrade pip
+COPY src src
+RUN mkdir temp
 RUN pip install --no-cache-dir -r src/requirements.txt
-CMD ["bash", "src/init.sh"]
+RUN git clone -b parameters https://github.com/Rectle/rectle-library.git src/rectle_lib
+
+# CMD ["sleep", "999999"]
+CMD ["python", "-u", "src/main.py"]

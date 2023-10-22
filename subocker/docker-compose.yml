@@ -8,3 +8,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=false
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 3
+        window: 60s

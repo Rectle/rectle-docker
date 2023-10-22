@@ -1,4 +1,4 @@
-build: build-docker build-podman
+build: build-podman build-docker
 
 build-docker: clean-docker
 	docker-compose -f subocker/docker-compose.yml up --build --detach

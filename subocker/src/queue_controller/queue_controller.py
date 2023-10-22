@@ -6,6 +6,7 @@ import stat
 import requests
 import shutil
 import json
+import subprocess
 from zipfile import ZipFile
 from cloud_storage.cloud_storage_controller import CloudStorage
 
@@ -50,24 +51,33 @@ class QueueController:
         os.makedirs(path + "/gifs", exist_ok=True)
 
         simulation_src = f"projects/{project_id}/code.zip"
-        simulation_dest = path + f"/code.zip"
+        raw_simulation_dest = "temp/code.zip"
         project_src = f"projects/{project_id}/models/{model_id}/model.zip"
-        project_dest = path + f"/model.zip"
+        project_dest = path + "/model.zip"
 
         storage = CloudStorage()
-        storage.import_file(simulation_src, simulation_dest)
+        storage.import_file(simulation_src, raw_simulation_dest)
         storage.import_file(project_src, project_dest)
 
-        zip_extractor = ZipFile(simulation_dest, "r")
-        zip_extractor.extractall(path=path)
+        zip_extractor = ZipFile(raw_simulation_dest, "r")
+        zip_extractor.extractall(path="temp")
         zip_extractor = ZipFile(project_dest)
         zip_extractor.extractall(path=path)
 
-        os.remove(simulation_dest)
+        os.remove(raw_simulation_dest)
         os.remove(project_dest)
+        main_dir = path + "/main.py"
+        self.rectle_lib_hash("temp", path)
 
-        os.chmod(path + "/main.py", stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-        os.chmod(path + "/gifs", stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        os.chmod(main_dir, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        # os.chmod(path + "/gifs", stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+
+    @staticmethod
+    def rectle_lib_hash(src_dir: str, dest_dir: str):
+        command = ["python", "src/rectle_lib/build/lang/python.py", src_dir, dest_dir]
+        subprocess.run(command)
+        command = ["python", "src/rectle_lib/build/core.py", dest_dir]
+        subprocess.run(command)
 
     @staticmethod
     def podman_healthcheck():
