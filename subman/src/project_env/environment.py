@@ -35,7 +35,7 @@ class Environment:
             print("run started:")
             process = subprocess.Popen(
                 [
-                    f"{self.bin_dir}python",
+                    f"python",
                     "-u",
                     "volume/project/main.py",
                     "volume/project/",

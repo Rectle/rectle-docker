@@ -64,8 +64,8 @@ class QueueController:
         zip_extractor = ZipFile(project_dest)
         zip_extractor.extractall(path=path)
 
-        os.remove(raw_simulation_dest)
-        os.remove(project_dest)
+        # os.remove(raw_simulation_dest)
+        # os.remove(project_dest)
         main_dir = path + "/main.py"
         self.rectle_lib_hash("temp", path)
 

@@ -11,5 +11,5 @@ RUN mkdir temp
 RUN pip install --no-cache-dir -r src/requirements.txt
 RUN git clone -b parameters https://github.com/Rectle/rectle-library.git src/rectle_lib
 
-# CMD ["sleep", "999999"]
 CMD ["python", "-u", "src/main.py"]
+# CMD ["sleep", "9999999"]
